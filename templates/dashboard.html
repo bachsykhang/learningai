@@ -1,0 +1,83 @@
+﻿{% extends "base.html" %}
+{% block title %}Bảng điều khiển | AI Academy VN{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>Xin chào, {{ current_user.full_name }}</h1>
+    <p class="meta">Vai trò: {{ "Quản trị viên" if is_admin else "Thành viên" }}</p>
+</section>
+
+<section class="dashboard-grid">
+    <article class="panel reveal">
+        <h2>Ví tiền</h2>
+        <p class="wallet-balance">{{ "{:,.0f}".format(current_user.balance) }}đ</p>
+        {% if is_admin %}
+            <form method="post" action="{{ url_for('wallet_topup') }}" class="inline-wallet-form">
+                <label for="amount">Nạp tiền (VNĐ)</label>
+                <input id="amount" name="amount" type="number" min="10000" step="10000" placeholder="Ví dụ: 100000" required>
+                <button type="submit" class="button">Nạp tiền</button>
+            </form>
+        {% else %}
+            <div class="payment-note">
+                <p><strong>Nạp tiền qua MoMo:</strong> {{ momo_phone }}</p>
+                <p><strong>Chủ tài khoản:</strong> Bạch Sỹ Khang</p>
+                <p><strong>Nội dung chuyển khoản:</strong> <code>napaisk {{ username_hint }} so_tien</code></p>
+                <p class="meta">Ví dụ: <code>napaisk {{ username_hint }} 500000</code></p>
+            </div>
+        {% endif %}
+    </article>
+
+    <article class="panel reveal">
+        <h2>Khóa học đã đăng ký</h2>
+        {% if enrolled_courses %}
+            <ul class="enrolled-list">
+                {% for item in enrolled_courses %}
+                    <li>
+                        <a class="text-link" href="{{ url_for('learn_course', slug=item.course.slug) }}">{{ item.course.title }}</a>
+                        <span class="meta">Ngày mua: {{ item.created_at }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="meta">Bạn chưa đăng ký khóa học nào.</p>
+            <a class="button ghost" href="{{ url_for('course_list') }}">Khám phá khóa học</a>
+        {% endif %}
+    </article>
+</section>
+
+<section class="panel reveal">
+    <div class="section-head">
+        <h2>Lịch sử giao dịch</h2>
+        <form class="tx-filter" method="get" action="{{ url_for('dashboard') }}">
+            <label for="tx_type">Lọc:</label>
+            <select id="tx_type" name="tx_type" data-autosubmit="true">
+                <option value="all" {% if tx_type == 'all' %}selected{% endif %}>Tất cả</option>
+                <option value="topup" {% if tx_type == 'topup' %}selected{% endif %}>Nạp tiền</option>
+                <option value="purchase_course" {% if tx_type == 'purchase_course' %}selected{% endif %}>Mua khóa học</option>
+                <option value="transfer_in" {% if tx_type == 'transfer_in' %}selected{% endif %}>Nhận tiền</option>
+                <option value="transfer_out" {% if tx_type == 'transfer_out' %}selected{% endif %}>Chuyển tiền</option>
+                <option value="admin_adjust_balance" {% if tx_type == 'admin_adjust_balance' %}selected{% endif %}>Điều chỉnh admin</option>
+            </select>
+        </form>
+    </div>
+    {% if transactions %}
+        <ul class="tx-list">
+            {% for tx in transactions %}
+                <li class="tx-item">
+                    <div>
+                        <p class="tx-note">{{ tx.note }}</p>
+                        <span class="meta">{{ tx.created_at }} • {{ tx.tx_type }}</span>
+                    </div>
+                    <div class="tx-right">
+                        <strong class="tx-amount {% if tx.amount >= 0 %}positive{% else %}negative{% endif %}">
+                            {% if tx.amount >= 0 %}+{% endif %}{{ "{:,.0f}".format(tx.amount) }}đ
+                        </strong>
+                        <span class="meta">Số dư: {{ "{:,.0f}".format(tx.balance_after) }}đ</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="meta">Chưa có giao dịch nào.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+﻿{% extends "base.html" %}
+{% block title %}Quản trị người dùng | AI Academy VN{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>Quản trị tài khoản</h1>
+    <p class="meta">Admin có thể chuyển tiền, sửa thông tin và đổi vai trò.</p>
+</section>
+
+<section class="panel reveal">
+    <h2>Chuyển tiền từ ví admin</h2>
+    <form action="{{ url_for('admin_transfer') }}" method="post" class="transfer-form">
+        <div class="field">
+            <label for="to_user_id">ID tài khoản nhận</label>
+            <input id="to_user_id" name="to_user_id" type="number" min="1" required>
+        </div>
+        <div class="field">
+            <label for="amount">Số tiền (VNĐ)</label>
+            <input id="amount" name="amount" type="number" min="1" required>
+        </div>
+        <button class="button" type="submit">Chuyển tiền</button>
+    </form>
+</section>
+
+<section class="panel reveal">
+    <h2>Danh sách người dùng</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Họ tên</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Số dư</th>
+                    <th>Ngày tạo</th>
+                    <th>Cập nhật</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>
+                        <input form="user-form-{{ user.id }}" type="text" name="full_name" value="{{ user.full_name }}" minlength="2" required>
+                    </td>
+                    <td>@{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <select form="user-form-{{ user.id }}" name="role">
+                            <option value="member" {% if user.role == "member" %}selected{% endif %}>member</option>
+                            <option value="admin" {% if user.role == "admin" %}selected{% endif %}>admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input form="user-form-{{ user.id }}" type="number" name="balance" value="{{ user.balance }}" min="0" required>
+                    </td>
+                    <td><span class="meta">{{ user.created_at }}</span></td>
+                    <td>
+                        <form id="user-form-{{ user.id }}" action="{{ url_for('admin_update_user', user_id=user.id) }}" method="post">
+                            <button type="submit" class="button tiny">Lưu</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

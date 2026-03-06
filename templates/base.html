@@ -1,0 +1,56 @@
+﻿<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Academy Việt Nam{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="{{ url_for('home') }}">AI Academy VN</a>
+        <nav>
+            <a href="{{ url_for('home') }}">Trang chủ</a>
+            <a href="{{ url_for('course_list') }}">Khóa học</a>
+            <a href="{{ url_for('about') }}">Giới thiệu</a>
+            {% if current_user %}
+                <a href="{{ url_for('dashboard') }}">Bảng điều khiển</a>
+                <a href="{{ url_for('profile') }}">Hồ sơ</a>
+                {% if is_admin %}
+                    <a href="{{ url_for('admin_overview') }}">Tổng quan</a>
+                    <a href="{{ url_for('admin_users') }}">Quản trị</a>
+                {% endif %}
+                <form class="inline-form" action="{{ url_for('logout') }}" method="post">
+                    <button class="nav-btn" type="submit">Đăng xuất</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Đăng nhập</a>
+                <a href="{{ url_for('register') }}">Đăng ký</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+    <p>&copy; {{ current_year }} AI Academy VN. Học AI để làm sản phẩm thật.</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

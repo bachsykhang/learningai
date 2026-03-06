@@ -1,0 +1,69 @@
+﻿{% extends "base.html" %}
+{% block title %}Khóa học AI | AI Academy VN{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>Danh sách khóa học AI</h1>
+    <p class="meta">Hiển thị {{ total_courses }} khóa học</p>
+</section>
+
+<form class="filter-bar filter-advanced" method="get" action="{{ url_for('course_list') }}">
+    <div class="field">
+        <label for="q">Tìm kiếm khóa học</label>
+        <input type="text" id="q" name="q" value="{{ search_query }}" placeholder="Ví dụ: GenAI, RAG, Machine Learning">
+    </div>
+    <div class="field">
+        <label for="level">Trình độ</label>
+        <select name="level" id="level">
+            {% for lv in levels %}
+            <option value="{{ lv }}" {% if lv == selected_level %}selected{% endif %}>{{ lv }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="topic">Chủ đề</label>
+        <select name="topic" id="topic">
+            {% for t in topics %}
+            <option value="{{ t }}" {% if t == selected_topic %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="track">Lộ trình nghề nghiệp</label>
+        <select name="track" id="track">
+            {% for tr in tracks %}
+            <option value="{{ tr }}" {% if tr == selected_track %}selected{% endif %}>{{ tr }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="sort">Sắp xếp</label>
+        <select name="sort" id="sort">
+            <option value="popular" {% if selected_sort == 'popular' %}selected{% endif %}>Phổ biến nhất</option>
+            <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Đánh giá cao</option>
+            <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Giá tăng dần</option>
+            <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Giá giảm dần</option>
+            <option value="duration" {% if selected_sort == 'duration' %}selected{% endif %}>Thời lượng ngắn trước</option>
+        </select>
+    </div>
+    <button type="submit" class="button filter-btn">Lọc ngay</button>
+</form>
+
+<div class="cards">
+    {% for course in courses %}
+    <article class="card reveal">
+        <p class="badge">{{ course.level }}</p>
+        <h2>{{ course.title }}</h2>
+        <p class="meta">{{ course.category }} • {{ course.career_track }}</p>
+        <p>{{ course.description }}</p>
+        <p class="meta">⏱ {{ course.duration }} • 💸 {{ course.price }}</p>
+        <p class="meta">👥 {{ course.students }} học viên • ⭐ {{ course.rating }} • {{ course.projects|length }} dự án</p>
+        <a class="button" href="{{ url_for('course_detail', slug=course.slug) }}">Mở khóa học</a>
+    </article>
+    {% else %}
+    <article class="card">
+        <h3>Không có khóa học phù hợp</h3>
+        <p>Hãy đổi bộ lọc để xem thêm khóa học.</p>
+    </article>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+{% block title %}Quiz cuối khóa | {{ course.title }}{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>Quiz cuối khóa - {{ course.title }}</h1>
+    <p class="meta">Điểm đạt yêu cầu: từ 70%</p>
+</section>
+
+<section class="panel reveal">
+    {% if previous_score %}
+        <p class="meta">Điểm lần gần nhất: <strong>{{ previous_score }}%</strong></p>
+    {% endif %}
+    <form method="post" class="quiz-form">
+        {% for q in questions %}
+            <fieldset class="quiz-item">
+                <legend><strong>Câu {{ loop.index }}:</strong> {{ q.question }}</legend>
+                {% for option in q.options %}
+                    <label class="quiz-option">
+                        <input type="radio" name="{{ q.id }}" value="{{ loop.index0 }}" required>
+                        {{ option }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+
+        <button class="button" type="submit">Nộp bài quiz</button>
+    </form>
+</section>
+{% endblock %}

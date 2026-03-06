@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}
+{% block title %}Bài học tuần {{ lesson.week }} | {{ course.title }}{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>{{ course.title }} - Tuần {{ lesson.week }}</h1>
+    <p class="meta">Tiến độ hiện tại: {{ completed_steps }}/{{ units|length }} bài</p>
+</section>
+
+<section class="panel reveal">
+    <h2>{{ lesson.title }}</h2>
+    <p>{{ lesson.summary }}</p>
+
+    <h3>Bài tập coding</h3>
+    <p><strong>{{ exercise.title }}</strong></p>
+    <p>{{ exercise.prompt }}</p>
+
+    <h3>Starter code</h3>
+    <form method="post" action="{{ url_for('run_lesson_code', slug=course.slug, week=lesson.week) }}" class="code-form">
+        <textarea name="code" class="code-editor" spellcheck="false">{{ starter_code }}</textarea>
+        <div class="learn-actions">
+            <button class="button ghost" type="submit" name="action" value="run">Chạy code</button>
+            {% if can_mark and not is_done %}
+                <button class="button" type="submit" name="action" value="submit">Nộp bài</button>
+            {% elif is_done %}
+                <span class="meta">Bài học này đã hoàn thành.</span>
+            {% else %}
+                <span class="meta">Bạn cần hoàn thành bài trước đó để mở khóa tuần này.</span>
+            {% endif %}
+            <a class="button ghost" href="{{ url_for('learn_course', slug=course.slug) }}">Quay lại lộ trình</a>
+        </div>
+    </form>
+
+    {% if last_submission %}
+        <h3>Kết quả chạy gần nhất</h3>
+        <pre class="code-output">{{ last_submission.output }}</pre>
+        <p class="meta">Trạng thái: {% if last_submission.passed %}Đạt{% else %}Chưa đạt{% endif %} • {{ last_submission.created_at }}</p>
+    {% endif %}
+</section>
+{% endblock %}

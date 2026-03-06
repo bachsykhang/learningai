@@ -1,0 +1,9 @@
+﻿{% extends "base.html" %}
+{% block title %}Không tìm thấy | AI Academy VN{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>404 - Không tìm thấy khóa học</h1>
+    <p>Khóa học bạn truy cập không tồn tại hoặc đã được cập nhật đường dẫn.</p>
+    <a class="button" href="{{ url_for('course_list') }}">Quay lại danh sách khóa học</a>
+</section>
+{% endblock %}

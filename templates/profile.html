@@ -1,0 +1,20 @@
+﻿{% extends "base.html" %}
+{% block title %}Hồ sơ cá nhân | AI Academy VN{% endblock %}
+{% block content %}
+<section class="panel auth-wrap reveal">
+    <h1>Hồ sơ cá nhân</h1>
+    <p class="meta">Username: <strong>{{ current_user.username }}</strong></p>
+    <form method="post" class="auth-form">
+        <label for="full_name">Họ và tên</label>
+        <input id="full_name" type="text" name="full_name" minlength="2" required value="{{ current_user.full_name }}">
+
+        <label for="current_password">Mật khẩu hiện tại (chỉ nhập khi muốn đổi mật khẩu)</label>
+        <input id="current_password" type="password" name="current_password">
+
+        <label for="new_password">Mật khẩu mới (để trống nếu không đổi)</label>
+        <input id="new_password" type="password" name="new_password" minlength="6">
+
+        <button class="button" type="submit">Lưu thay đổi</button>
+    </form>
+</section>
+{% endblock %}

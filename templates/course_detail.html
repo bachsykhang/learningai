@@ -1,0 +1,93 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ course.title }} | AI Academy VN{% endblock %}
+{% block content %}
+<section class="course-header">
+    <p class="badge">{{ course.level }}</p>
+    <h1>{{ course.title }}</h1>
+    <p class="lead">{{ course.description }}</p>
+    <p class="meta">{{ course.category }} • {{ course.career_track }}</p>
+    <p class="meta">⏱ {{ course.duration }} • ⭐ {{ course.rating }} • 💸 {{ course.price }} • 👥 {{ course.students }} học viên</p>
+</section>
+
+<section class="split">
+    <article class="panel reveal">
+        <h2>Bạn sẽ học được gì</h2>
+        <ul>
+            {% for skill in course.skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Kết quả đầu ra</h2>
+        <ul>
+            {% for outcome in course.outcomes %}
+            <li>{{ outcome }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Yêu cầu đầu vào</h2>
+        <ul>
+            {% for req in course.requirements %}
+            <li>{{ req }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Đề cương theo tuần</h2>
+        <div class="syllabus-list">
+            {% for item in course.syllabus %}
+            <div class="syllabus-item">
+                <p class="meta">Tuần {{ item.week }}</p>
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>Dự án thực hành</h2>
+        <ul>
+            {% for project in course.projects %}
+            <li>{{ project }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Câu hỏi thường gặp</h2>
+        <div class="faq-list">
+            {% for faq in course.faq %}
+            <details>
+                <summary>{{ faq.q }}</summary>
+                <p>{{ faq.a }}</p>
+            </details>
+            {% endfor %}
+        </div>
+    </article>
+
+    <aside class="panel enroll-box reveal">
+        <h2>{% if is_enrolled %}Vào học{% else %}Mua khóa học{% endif %}</h2>
+        {% if current_user %}
+            <p class="meta">Bạn đang đăng nhập với email: {{ current_user.email }}</p>
+            <p class="meta">Số dư hiện tại: {{ "{:,.0f}".format(current_user.balance) }}đ</p>
+            {% if is_enrolled %}
+                <a class="button" href="{{ url_for('learn_course', slug=course.slug) }}">Vào học ngay</a>
+            {% else %}
+                <form action="{{ url_for('enroll') }}" method="post">
+                    <input type="hidden" name="course_slug" value="{{ course.slug }}">
+                    <button type="submit" class="button">Mua với giá {{ course.price }}</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p class="meta">Bạn cần đăng nhập để mua khóa học.</p>
+            <a class="button" href="{{ url_for('login', next=request.path) }}">Đăng nhập để mua</a>
+        {% endif %}
+
+        {% if related_courses %}
+        <hr>
+        <h3>Khóa học liên quan</h3>
+        <ul>
+            {% for related in related_courses %}
+            <li><a class="text-link" href="{{ url_for('course_detail', slug=related.slug) }}">{{ related.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+﻿{% extends "base.html" %}
+{% block title %}Giới thiệu | AI Academy VN{% endblock %}
+{% block content %}
+<section class="panel reveal">
+    <h1>Về AI Academy VN</h1>
+    <p>AI Academy VN tập trung đào tạo AI theo hướng thực chiến: học ngắn gọn, làm dự án thật, áp dụng ngay vào công việc.</p>
+    <p>Chúng tôi xây lộ trình theo 3 mức độ: Cơ bản, Trung cấp, Nâng cao để phù hợp cho cả người mới và kỹ sư đã đi làm.</p>
+    <p>Tổng lượt đăng ký khóa học: <strong>{{ enrollment_count }}</strong></p>
+    <p>Tổng số thành viên đang có tài khoản: <strong>{{ member_count }}</strong></p>
+</section>
+{% endblock %}

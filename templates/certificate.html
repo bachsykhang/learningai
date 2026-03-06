@@ -1,0 +1,15 @@
+﻿{% extends "base.html" %}
+{% block title %}Chứng nhận hoàn thành | {{ course.title }}{% endblock %}
+{% block content %}
+<section class="certificate panel reveal">
+    <p class="meta">AI Academy VN</p>
+    <h1>Chứng Nhận Hoàn Thành</h1>
+    <p>Trao cho học viên</p>
+    <h2>{{ learner_name }} (@{{ learner_username }})</h2>
+    <p>Đã hoàn thành khóa học</p>
+    <h3>{{ course.title }}</h3>
+    <p>Điểm quiz cuối khóa: <strong>{{ score }}%</strong></p>
+    <p>Ngày cấp: {{ issue_date }}</p>
+    <a class="button" href="{{ url_for('learn_course', slug=course.slug) }}">Quay lại trang học</a>
+</section>
+{% endblock %}
